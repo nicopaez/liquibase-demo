@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Passw0rd!
+      POSTGRES_USER: jobvacancy
+      POSTGRES_DB: jobvacancy
+    ports:
+      - 5432:5432
+  migrator:
+    image: liquibase/liquibase:4.24-alpine
+    network_mode: host
+    volumes:
+      - ./migrations:/liquibase/changelog
+    command: update --defaults-file /liquibase/changelog/liquibase.properties
+    depends_on:
+      - db
